@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from api import routes
 
 app = Flask(__name__)
+app.secret_key = 'yomommaissofatshecantwalkintoseaworldwithoutanotawhalesign'
 client = MongoClient('localhost', 27017, username="hobbygator", password="yomomma")
 hg_database = client.flask_db
 users_db = client.users

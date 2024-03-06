@@ -1,6 +1,7 @@
 from flask import Flask
 from pymongo import MongoClient
 from api.data_structs import User
+from server import app
 
 #@app.route("/members")
 #
@@ -17,3 +18,7 @@ def register_user():
         return jsonify({}), 200
     if request.method == 'POST':
         return User().signup()
+
+@app.route('/signout/')
+def signout():
+    User().signout()
