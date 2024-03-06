@@ -1,0 +1,45 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10%;
+    margin-bottom: 10%;
+    padding: 5%;
+    border: 1px solid #000;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px 0 #000;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+.label{
+    margin-bottom: 5%;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #000;
+  
+}
+.input{
+    margin-bottom: 5%;
+    font-size: 1.5em;
+    padding: 1%;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #000;
+}
+.dontHaveAccount{
+  justify-content: center;
+    display: flex;
+    margin-top: 5%;
+     margin-left: 8%;
+    font-size: 1.5em;
+}
+.loginSignUp{
+  display: flex;
+  justify-content: center;
+  margin-top: 5%;
+  margin-left: 8%;
+  font-size: 2.5em;
+}
