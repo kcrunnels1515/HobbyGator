@@ -1,11 +1,6 @@
 from flask import Flask
 from pymongo import MongoClient
-
-app = Flask(__name__)
-client = MongoClient('localhost', 27017, username="hobbygator", password="yomomma")
-hg_database = client.flask_db
-users_db = client.users
-forums_db = client.forums
+from api.data_structs import User
 
 #@app.route("/members")
 #
@@ -14,12 +9,11 @@ forums_db = client.forums
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
-    return "Hello"
+    return jsonify({}), 200
 
-@app.route('/register', methods=('POST'))
+@app.route('/register/', methods=('GET', 'POST'))
 def register_user():
-    users_db.insert_one( { 'username': request.json["username"], 'passwd': request.json["passwd"] } )
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0",debug=True)
+    if request.method == 'GET':
+        return jsonify({}), 200
+    if request.method == 'POST':
+        return User().signup()
