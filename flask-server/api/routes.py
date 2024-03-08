@@ -8,11 +8,7 @@ from server import app
 #def members():
 #    return {"members": ["Member1", "Member2", "Member3"]}
 
-@app.route('/', methods=('GET', 'POST'))
-def index():
-    return jsonify({}), 200
-
-@app.route('/register/', methods=('GET', 'POST'))
+@app.route('/register/', methods=["GET", "POST"])
 def register_user():
     if request.method == 'GET':
         return jsonify({}), 200

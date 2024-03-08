@@ -12,8 +12,8 @@ class User:
     def signup(self):
         user = {
                 "_id": uuid.uuid4().hex,
-                "username": request.form.get('username')
-		"passwd": request.form.get('passwd')
+                "username": request.form.get('username'),
+		"passwd": request.form.get('passwd'),
         }
         user['passwd'] = pbkdf2_sha256.encrypt(user['passwd'])
 
