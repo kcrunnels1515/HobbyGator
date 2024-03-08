@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './LoginSignUp.css';
+import './Login.css';
 
-const LoginSignUp = () => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
@@ -21,7 +21,7 @@ const LoginSignUp = () => {
 
   return (
     <div>
-      <h1 className='loginSignUp'>{isSignUp ? 'Sign Up to Hobby Gator' : 'Login to HobbyGator'}</h1>
+      <h1 className='login'>{isSignUp ? 'Sign Up to Hobby Gator' : 'Login to HobbyGator'}</h1>
 
       <form className='form' onSubmit={handleSubmit}>
 
@@ -44,4 +44,4 @@ const LoginSignUp = () => {
   );
 };
 
-export default LoginSignUp;
+export default Login;
