@@ -1,12 +1,20 @@
-import LoginSignUp from './Components/LoginSignUp/LoginSignUp';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+} from "react-router-dom";
+import Login from "./login/Login"
+import SignUp from "./signup/SignUp"
+
 
 function App() {
   return (
-    <div> 
-      <LoginSignUp/>
-
-
-    </div>
+	  <Router>
+	  	<Routes>
+	  		<Route path="/login" element={<Login />} />
+	  		<Route path="/signup" element={<SignUp />} />
+	  	</Routes>
+	  </Router>
   );
 }
 
