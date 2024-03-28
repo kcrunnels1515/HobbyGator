@@ -15,9 +15,12 @@ const SignUp = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your login or sign up logic here
-  };
+	  e.preventDefault();
+	  fetch('/api/signup', {
+		  method: 'POST',
+		  body: JSON.stringify({
+
+		  };
 
   return (
     <div>
