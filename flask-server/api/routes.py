@@ -1,14 +1,15 @@
 from flask import Flask
 from pymongo import MongoClient
 from api.data_structs import User
+from server import app
 
 #@app.route("/members")
 #
 #def members():
 #    return {"members": ["Member1", "Member2", "Member3"]}
 
-@app.route('/', methods=('GET', 'POST'))
-def index():
+@app.route('/api/login', methods=["POST"])
+def login():
     return jsonify({}), 200
 
 @app.route('/register/', methods=('GET', 'POST'))

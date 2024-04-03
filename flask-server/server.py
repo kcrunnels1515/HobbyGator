@@ -12,9 +12,11 @@ forums_db = client.forums
 def index():
     return "Hello"
 
-@app.route('/signup/', methods=('POST'))
-def signup():
+#@app.route('/signup/', methods=('POST'))
+#def signup():
 
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0",debug=True)
+
+

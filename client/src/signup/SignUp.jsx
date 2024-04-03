@@ -16,11 +16,11 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
 	  e.preventDefault();
-	  fetch('/api/signup', {
-		  method: 'POST',
-		  body: JSON.stringify({
-
-		  };
+//  fetch('/api/signup', {
+//	  method: 'POST',
+//	  body: JSON.stringify({
+//
+	  };
 
   return (
     <div>

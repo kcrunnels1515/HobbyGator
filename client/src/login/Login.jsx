@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-const Login = () => {
+async function loginUser(credentials){
+	return fetch('/api/login', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(credentials)
+	})
+	.then(data => data.json());
+};
+
+const Login = ({setToken}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -14,14 +24,18 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your login or sign up logic here
+  const handleSubmit = async e => {
+	  e.preventDefault();
+	  const token = await loginUser({
+		  email,
+		  password
+	  });
+	  setToken(token);
   };
 
   return (
     <div>
-      <h1 className='login'>{isSignUp ? 'Sign Up to Hobby Gator' : 'Login to HobbyGator'}</h1>
+      <h1 className='login'>Login to HobbyGator</h1>
 
       <form className='form' onSubmit={handleSubmit}>
 
@@ -33,13 +47,8 @@ const Login = () => {
 
         <input type="password" value={password} onChange={handlePasswordChange} />
 
-        <button type="submit">{isSignUp ? 'Sign Up' : 'Login'}</button>
-        <button type="button">Continue with Google</button>
-        
+        <button type="submit">Login</button>
       </form>
-      <p className='dontHaveAccount'onClick={() => setIsSignUp(!isSignUp)}>
-        {isSignUp ? 'Already have an account? Login' : 'Don\'t have an account? Sign Up'}
-      </p>
     </div>
   );
 };
