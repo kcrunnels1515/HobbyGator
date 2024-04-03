@@ -52,7 +52,7 @@ def update_user(user_id):
     user.user_name = data.get("userName", user.user_name)
     user.email = data.get("email", user.email)
     user.password = data.get("password", user.password)
-    user.confirm_password = data.get("password", user.confirmPassword)
+    user.confirm_password = data.get("password", user.confirm_password)
 
     # commits the changes to the backend
     db.session.commit()

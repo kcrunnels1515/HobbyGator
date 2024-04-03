@@ -22,7 +22,7 @@ const UserForm = ({ existingUser = {}, updateCallback }) => {
             confirmPassword
         }
         // this defines our URL so that we correctly access the backend with the right user and are able to change it
-        const url = "http://127.0.0.1:5000/" + (updating ? `update_user/${existinguser.id}` : "create_user")
+        const url = "http://127.0.0.1:5000/" + (updating ? `update_user/${existingUser.id}` : "create_user")
 
         // tells the website what method we plan to use and jsonifies the data so that backend can read it
         const options = {
