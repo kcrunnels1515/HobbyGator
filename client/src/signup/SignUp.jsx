@@ -30,11 +30,12 @@ const SignUp = () => {
         e.preventDefault()
         // creates a data list that we will need to pass to the backend
         const data = {
-            userName,
-            email,
-            password,
-            confirmPassword
+            "username": userName,
+            "email": email,
+            "passwd": password,
+            "confirmpasswd": confirmPassword
         }
+	  console.log(data)
         // this defines our URL so that we correctly access the backend with the right user and are able to change it
         const url = "http://127.0.0.1:5000/api/signup"// + (updating ? `update_user/${existinguser.id}` : "create_user")
 
