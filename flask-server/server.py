@@ -6,7 +6,7 @@ import pdb
 import uuid
 
 app = Flask(__name__)
-client = MongoClient('localhost', 27017, username="hobbygator", password="yomomma")
+client = MongoClient('mongodb://hobbygator:yomomma@localhost/flask_db')
 hg_database = client.flask_db
 users_db = hg_database.users
 forums_db = hg_database.forums
@@ -50,7 +50,7 @@ def login():
 @app.route('/api/signup', methods=["POST"])
 def signup():
     # 200 -> success, 201 -> user exists, 202 -> passwords don't match
-    breakpoint()
+    #breakpoint()
     req_data = request.get_json()
     user = {
             "_id": uuid.uuid4().hex,
@@ -69,6 +69,7 @@ def signup():
 
     if (user['passwd'] == user['confirmpasswd']):
         user['passwd'] = generate_password_hash(user["passwd"])
+        del user['confirmpasswd']
         response = make_response(
             jsonify(
                 {"message": "user_exists"}
@@ -91,10 +92,12 @@ def signup():
 def delete():
     # returns 200 on success, 201 on non-existent user
     # 202 on invalid authentication
+    req_data = request.get_json()
     user = {
-            "username": request.form.get('username'),
-            "passwd": request.form.get('passwd'),
+            "username": req_data['username'],
+            "passwd": req_data['passwd'],
     }
+    breakpoint()
     result = users_db.find_one({ "username": user["username"] })
     response = make_response(
         jsonify(
@@ -118,6 +121,7 @@ def delete():
                 200,
             )
             response.delete_cookie('HGLoggedIn')
+            users_db.delete_one(result)
     return response
 
 if __name__ == "__main__":
