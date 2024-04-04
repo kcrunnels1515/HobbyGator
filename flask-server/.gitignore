@@ -1,1 +1,3 @@
 /venv
+/flask-server/__pycache__
+/flask-server/api/__pycache__

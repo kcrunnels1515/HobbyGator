@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
     BrowserRouter as Router,
     Routes,
@@ -8,11 +9,16 @@ import SignUp from "./signup/SignUp"
 
 
 function App() {
-  return (
+	//const [token, setToken] = useState('');
+
+	//if(!token) {
+	//	return <Login setToken={setToken} />
+	//}
+	return (
 	  <Router>
 	  	<Routes>
-	  		<Route path="/login" element={<Login />} />
-	  		<Route path="/signup" element={<SignUp />} />
+	  	<Route path="/login" element={<Login />} />
+		<Route path="/signup" element={<SignUp />} />
 	  	</Routes>
 	  </Router>
   );
