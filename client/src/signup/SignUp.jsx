@@ -9,19 +9,19 @@ const SignUp = () => {
   const [password, setPassword] = useState('');//existingUser.password || "");
   const [confirmPassword, setConfirmPassword] = useState('');//existingUser.confirmPassword || "");
 
-  const setEmail = (e) => {
+  const handleEmail = (e) => {
     setEmail(e.target.value);
   };
 
-  const setPassword = (e) => {
+  const handleUserName = (e) => {
+    setUserName(e.target.value);
+  };
+
+  const handlePassword = (e) => {
     setPassword(e.target.value);
   };
 
-  const setPassword = (e) => {
-    setConfirmPassword(e.target.value);
-  };
-
-  const setConfirmPassword = (e) => {
+  const handleConfirmPassword = (e) => {
     setConfirmPassword(e.target.value);
   };
 
@@ -53,27 +53,28 @@ const SignUp = () => {
         if (response.status !== 201 && response.status !== 200) {
             const data = await response.json()
             alert(data.message)
-        } else {
-            updateCallback()
-        }
-	  };
+        } 
+	};
 
   return (
     <div>
-      <h1 className='signUp'>{isSignUp ? 'Sign Up to Hobby Gator' : 'Login to HobbyGator'}</h1>
+      <h1 className='signUp'>{'Sign Up to Hobby Gator'}</h1>
 
       <form className='form' onSubmit={handleSubmit}>
 
         <label htmlFor="userName">User Name:</label>
-        <input type="text" id="userName" value={userName} onChange={setUserName}/>
+        <input type="text" id="userName" value={userName} onChange={handleUserName}/>
 
         <label className='label'>Email:</label>
-        <input type="email" value={email} onChange={handleEmailChange} />
+        <input type="email" value={email} onChange={handleEmail} />
 
         <label className='label'>Password:</label>
-        <input type="password" value={password} onChange={handlePasswordChange} />
+        <input type="password" value={password} onChange={handlePassword} />
 
-        <button type="submit">{isSignUp ? 'Sign Up' : 'Login'}</button>
+        <label className='label'>Password:</label>
+        <input type="password" value={confirmPassword} onChange={handleConfirmPassword} />
+
+        <button type="submit">{'Sign Up'}</button>
         <button type="button">Continue with Google</button>
         
       </form>

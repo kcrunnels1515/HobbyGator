@@ -13,6 +13,7 @@ class User:
                 "passwd": request.form.get('passwd'),
                 "confirmpasswd": request.form.get('confirmpasswd')
         }
+        print("username: {}, email: {}, password: {}, confirm: {}".format(user["username"], user["email"], user["passwd"], user["confirmpasswd"]), file=sys.stderr)
         response = make_response({
             jsonify(
                 {"message": "password_no_matchy"}

@@ -3,9 +3,13 @@ from pymongo import MongoClient
 from api.data_structs import User
 from server import app
 
+@app.route('/', methods=["GET"])
+def root():
+    return jsonify('ok'), 200 #User().login()
+
 @app.route('/api/login', methods=["POST"])
 def login():
-    return User().login()
+    return jsonify('ok'), 200 #User().login()
 
 @app.route('/api/signup', methods=["POST"])
 def signup():
