@@ -12,5 +12,5 @@ def signup():
     return User().signup()
 
 @app.route('/api/delete', methods=["POST"])
-def signup():
+def delete():
     return User().delete()
