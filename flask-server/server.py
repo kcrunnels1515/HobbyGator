@@ -4,9 +4,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sys
 import pdb
 import uuid
+from flask_jwt_extended import JWTManager,create_access_token,jwt_required
+from datetime import timedelta
+
 
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = '�cҾK�K�f3��(ֲ/�eѲizv!X�}T�cS	w2TUiOb|�32k2�-'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)
 client = MongoClient('mongodb://hobbygator:yomomma@localhost/flask_db')
+jwt = JWTManager(app)
 hg_database = client.flask_db
 users_db = hg_database.users
 forums_db = hg_database.forums
@@ -44,7 +50,6 @@ def login():
                 ),
                 200,
             )
-            response.set_cookie('HGLoggedIn', result['_id'])
     return response
 
 @app.route('/api/signup', methods=["POST"])
@@ -97,7 +102,7 @@ def delete():
             "username": req_data['username'],
             "passwd": req_data['passwd'],
     }
-    breakpoint()
+    #breakpoint()
     result = users_db.find_one({ "username": user["username"] })
     response = make_response(
         jsonify(

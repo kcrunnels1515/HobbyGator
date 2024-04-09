@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
-    BrowserRouter as Router,
-    Routes,
+    BrowserRouter,
+    Switch,
     Route,
 } from "react-router-dom";
 import Login from "./login/Login"
@@ -15,12 +15,16 @@ function App() {
 	//	return <Login setToken={setToken} />
 	//}
 	return (
-	  <Router>
-	  	<Routes>
-	  	<Route path="/login" element={<Login />} />
-		<Route path="/signup" element={<SignUp />} />
-	  	</Routes>
-	  </Router>
+	  <BrowserRouter>
+		<Switch>
+	  		<Route path="/login">
+				<Login />
+			</Route>
+			<Route path="/signup">
+				<SignUp />
+			</Route>
+		</Switch>
+	  </BrowserRouter>
   );
 }
 
