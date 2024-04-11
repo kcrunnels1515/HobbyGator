@@ -37,7 +37,7 @@ const SignUp = () => {
         }
 	  console.log(data)
         // this defines our URL so that we correctly access the backend with the right user and are able to change it
-        const url = "/api/signup"// + (updating ? `update_user/${existinguser.id}` : "create_user")
+        const url = "/user/signup"// + (updating ? `update_user/${existinguser.id}` : "create_user")
 
         // tells the website what method we plan to use and jsonifies the data so that backend can read it
         const options = {
@@ -63,17 +63,22 @@ const SignUp = () => {
 
       <form className='form' onSubmit={handleSubmit}>
 
-        <label htmlFor="userName">User Name:</label>
-        <input type="text" id="userName" value={userName} onChange={handleUserName}/>
-
-        <label className='label'>Email:</label>
-        <input type="email" value={email} onChange={handleEmail} />
-
-        <label className='label'>Password:</label>
-        <input type="password" value={password} onChange={handlePassword} />
-
-        <label className='label'>Password:</label>
-        <input type="password" value={confirmPassword} onChange={handleConfirmPassword} />
+        <label className="label">
+          User Name: 
+          <input type="text" id="userName" value={userName} onChange={handleUserName}/>
+        </label>
+        <label className='label'>
+          Email:
+          <input type="email" value={email} onChange={handleEmail} />
+        </label>
+        <label className='label'>
+          Password:
+          <input type="password" value={password} onChange={handlePassword} />
+        </label>
+        <label className='label'>
+          Re-enter password:
+          <input type="password" value={confirmPassword} onChange={handleConfirmPassword} />  
+        </label>
 
         <button type="submit">{'Sign Up'}</button>
         <button type="button">Continue with Google</button>

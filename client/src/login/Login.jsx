@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import './Login.css';
+import Navbar from '../components/Navbar';
+
 
 const Login = ({setToken}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleUsernameChange = (e) => {
-    setEmail(e.target.value);
+    setUsername(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -17,11 +19,11 @@ const Login = ({setToken}) => {
 	e.preventDefault();
         // creates a data list that we will need to pass to the backend
         const data = {
-            "username": userName,
+            "username": username,
             "passwd": password,
         }
         // this defines our URL so that we correctly access the backend with the right user and are able to change it
-        const url = "/api/login"// + (updating ? `update_user/${existinguser.id}` : "create_user")
+        const url = "/user/login"// + (updating ? `update_user/${existinguser.id}` : "create_user")
 
         // tells the website what method we plan to use and jsonifies the data so that backend can read it
         const options = {
@@ -48,15 +50,17 @@ const Login = ({setToken}) => {
 
       <form className='form' onSubmit={handleSubmit}>
 
-        <label className='label'>Username:</label>
+        <label className='label'>
+          Username: 
+          <input type="text" value={username} onChange={handleUsernameChange} />
+        </label>
 
-        <input type="text" value={usename} onChange={handleUsernameChange} />
-
-        <label className='label'>Password:</label>
-
-        <input type="password" value={password} onChange={handlePasswordChange} />
-
+        <label className='label'>
+          Password: 
+          <input type="password" value={password} onChange={handlePasswordChange} />
+        </label>
         <button type="submit">Login</button>
+
       </form>
     </div>
   );

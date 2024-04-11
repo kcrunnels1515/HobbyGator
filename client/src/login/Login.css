@@ -15,13 +15,14 @@
     margin-right: 25%;
 }
 .label{
-    margin-bottom: 5%;
+    flex-direction: column;
+    margin-bottom: 2%;
     font-size: 1.5em;
     font-weight: bold;
     color: #000;
   
 }
-.input{
+.text{
     margin-bottom: 5%;
     font-size: 1.5em;
     padding: 1%;
