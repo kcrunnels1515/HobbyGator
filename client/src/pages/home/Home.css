@@ -1,0 +1,64 @@
+body {
+  background-color: #f2f2f2;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  color: #000000;
+  text-align: center;
+}
+
+.tagline {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.aboutUsText {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5%;
+  display: flex;
+  padding-inline: 20px;
+}
+
+.form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 100%;
+  border: 1px solid #000;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px 0 #000;
+  width: 10%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.p {
+  
+  background-color: #f2f2f2;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* REFERENCE FOR HOVER: https://thebrandsmen.com/css-image-hover-effects/ */
+.grow img{
+  transition: 1s ease;
+}
+
+.grow img:hover{
+  -webkit-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  transform: scale(1.2);
+  transition: 1s ease;
+}

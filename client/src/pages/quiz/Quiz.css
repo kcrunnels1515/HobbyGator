@@ -1,0 +1,54 @@
+.form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5%;
+  margin-bottom: 10%;
+  padding: 5%;
+  padding-bottom: 10px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px 0 #000;
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
+.title{
+  display: flex;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.quiz{
+  display: flex;
+  justify-content: left;
+  flex-direction: row;
+  align-items: center;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.text{
+    display:block;   
+    justify-content: left;
+}
+
+.onClick{
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    font-size: 1.5rem;
+    margin-left: 45%;
+  }
+
+.center{
+  justify-content: center;
+  align-self: center;
+  text-align: center;
+}
+

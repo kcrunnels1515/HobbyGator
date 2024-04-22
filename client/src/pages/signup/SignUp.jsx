@@ -59,10 +59,8 @@ const SignUp = () => {
 
   return (
     <div>
-      <h1 className='signUp'>{'Sign Up to Hobby Gator'}</h1>
-
       <form className='form' onSubmit={handleSubmit}>
-
+      <h1 className='signUp'>Sign Up to Hobby Gator</h1>
         <label className="label">
           User Name: 
           <input type="text" id="userName" value={userName} onChange={handleUserName}/>
@@ -81,7 +79,7 @@ const SignUp = () => {
         </label>
 
         <button type="submit">{'Sign Up'}</button>
-        <button type="button">Continue with Google</button>
+        {/* <button type="button">Continue with Google</button> */}
         
       </form>
     </div>

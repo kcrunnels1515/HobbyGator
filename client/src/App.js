@@ -5,12 +5,15 @@ import {
     Route,
 } from "react-router-dom";
 
-import Login from "./login/Login"
-import SignUp from "./signup/SignUp"
-import Forum from "./forum/Forum"
-import Home from "./home/Home"
+import Login from "./pages/login/Login"
+import SignUp from "./pages/signup/SignUp"
+import Forum from "./components/Forum"
+import Home from "./pages/home/Home"
 import Navbar from './components/Navbar';
-import CreatePost from './create/Create';
+import CreatePost from './pages/create/Create';
+import Quiz from './pages/quiz/Quiz';
+import CreateForum from './pages/create/CreateForum';
+import Forums from './pages/forums/Forums';
 
 
 function App() {
@@ -18,31 +21,28 @@ function App() {
 
 	//if(!token) {
 	//	return <Login setToken={setToken} />
-	//}		/
-
-	// Navigation bar component:
-	let Component
-	switch(window.location.pathname)
-	{
-		case "/":
-			Component = Home;
-			break;
-		case "/forum":
-			Component = Forum;
-			break;		
-		case "/login":
-			Component = Login;
-			break;
-		case "/signup":
-			Component = SignUp;
-			break;
-		case "/create":
-			Component = CreatePost;
-	}	
+    //}		/
+    // 
+    // nobody types in the url of the forum they're going to post on, create post should be a component accessible
+    // in a particular forum page
+    //
 	return (
 		<>
 			<Navbar/>
-			<Component/>
+			<div className='Component'>
+				<Routes>
+					<Route path="/" element={<Home />} />
+       			
+					<Route path="/forum/newforum" element={<CreateForum/>} />
+					<Route path="/forum/:forum_name" element={<Forum />} />
+					<Route path="/forum/post" element={<CreatePost/>} />
+					{/*<Route path="/posts/:post_id" element={< />} /> */}
+					<Route path="/login" element={<Login />} />
+					<Route path="/forum" element = {<Forums/>}/>
+					<Route path="/signup" element={<SignUp />} />
+					<Route path="/quiz" element={<Quiz/>} />
+				</Routes>
+			</div>
 		</>
 	)
 }

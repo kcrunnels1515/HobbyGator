@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, make_response
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 import sys
 import pdb
 import uuid
-from flask_jwt_extended import JWTManager,create_access_token,jwt_required
+from flask_jwt_extended import JWTManager,create_access_token,jwt_required, get_jwt_identity
 from datetime import timedelta
 
 
@@ -18,16 +19,22 @@ users_db = hg_database.users
 forums_db = hg_database.forums
 posts_db = hg_database.posts
 
+##############
+# STRUCTS   ##
+##############
+
 class User:
     def signup(self):
         # 200 -> success, 201 -> user exists, 202 -> passwords don't match
         #breakpoint()
         req_data = request.get_json()
         user = {
+                "pub_id": uuid.uuid4().hex,
                 "email": req_data['email'],
                 "username": req_data['username'],
                 "passwd": req_data['passwd'],
                 "confirmpasswd": req_data['confirmpasswd'],
+                "forums": [],
         }
         response = make_response(
             jsonify(
@@ -60,9 +67,10 @@ class User:
         return response
     def login(self):
         # returns 200 on success, 201 on invalid password, 202 on user not found
+        req_data = request.get_json()
         user = {
-                "username": request.form.get('username'),
-                "passwd": request.form.get('passwd'),
+                "username": req_data["username"],
+                "passwd": req_data["passwd"]
         }
         result = users_db.find_one({ "username": user["username"] })
         response = make_response(
@@ -71,8 +79,7 @@ class User:
             ),
             202,
         )
-        response.headers["Content-Type"] = "application/json"
-        if (result):
+        if result:
             response = make_response(
                 jsonify(
                     {"message": "password incorrect"}
@@ -80,12 +87,14 @@ class User:
                 201,
             )
             if (check_password_hash(result['passwd'], user['passwd'])):
+                token = generate_token(str(result['_id']))
                 response = make_response(
                     jsonify(
-                        {"message": "logged in"}
+                        {"access_token", token}
                     ),
                     200,
                 )
+
         return response
     def delete(self):
         # returns 200 on success, 201 on non-existent user
@@ -121,7 +130,43 @@ class User:
                 response.delete_cookie('HGLoggedIn')
                 users_db.delete_one(result)
         return response
-
+    def add_forum(self):
+        req_data = request.get_json()
+        user = {
+                "username": req_data['username'],
+                "forum_name": req_data['forum_name']
+        }
+        response = make_response(
+            jsonify(
+                {"message": "forum_no_existy"}
+            ),
+            202,
+        )
+        forum = forums_db.find_one({"name": user['forum_name']})
+        if forum:
+            response = make_response(
+                jsonify(
+                    {"message": "failed_adding_forum"}
+                ),
+                201,
+            )
+            if users_db.find_one_and_update({ 'username': user['username'] }, { '$push': {'forums': forum['_id']} }):
+                 response = make_response(
+                     jsonify(
+                         {"message": "added_forum"}
+                     ),
+                     200,
+                 )
+        return response
+    def get_forums(self):
+        req_data = request.get_json()
+        response = make_response(
+            jsonify(
+                {"message": "user_dont_exists"}
+            ),
+            202
+        )
+        return response
 class Forum:
     def create(self):
         req_data = request.get_json()
@@ -176,10 +221,8 @@ class Forum:
         post = {
             "title": req_data['title'],
             "username": req_data['username'],
-            "name": "".join([ c.lower() if c.isalnum() else "_" for c in req_data["title"] ]) + '_' + str(uuid.uuid4().hex[0:6]),
             "forum_name": req_data['forum_name'],
             "post_body": req_data['post_body'],
-            "replies": [],
         }
         response = make_response(
             jsonify(
@@ -212,45 +255,176 @@ class Forum:
             ),
             201
         )
-        if (forum_obj := forums_db.find_one({"name": req_data['forum_name']})):
-            pipeline = [
-                {'$match': {'_id': {'$in': forum_obj['posts']}}},
-                {'$project': {
-                    '_id': {"$toString": "$_id"},
-                    'title': 1,
-                    'username': 1,
-                    'name': 1,
-                    'forum_name': 1,
-                    'post_body': 1,
-                    'replies': 1,
-                }}
-            ]
+
+        forum_name = req_data['forum_name']
+
+        if (forum_obj := forums_db.find_one({"name": forum_name})):
             forum = {
                 "title": forum_obj['title'],
                 "name": forum_obj['name'],
                 "tags": forum_obj['tags'],
                 "info_block": forum_obj['info_block'],
-                "posts": list(posts_db.aggregate(pipeline)),
+                "posts": Post().retrieve(forum_obj['posts']),
             }
             response = make_response(
                 jsonify(forum),
                 200
             )
         return response
-
 class Post:
-    def create(self, post_struct):
-        return posts_db.insert_one(post_struct)
+    def create(self, data):
+        data['name'] = "".join([ c.lower() if c.isalnum() else "_" for c in data["title"] ]) + '_' + str(uuid.uuid4().hex[0:6])
+        data['replies'] = []
+        data['votes'] = 0
+        return posts_db.insert_one(data)
     def edit(self):
-        return jsonify('ok'), 200
+        req_data = request.get_json()
+        post = {
+            '_id': req_data['_id'],
+            'post_body': req_data['post_body']
+        }
+        response = make_response(
+            jsonify(
+                {"message": "incorrect_id"}
+            ),
+            201
+        )
+
+        if posts_db.find_one_and_update({ '_id': ObjectId(post['_id']) },
+                                        { '$push': { 'post_body': post['post_body'] } }):
+            response = make_response(
+                jsonify(
+                    {"message": "post_modified"}
+                ),
+                200
+            )
+        return response
     def delete(self):
-        return jsonify('ok'), 200
-    def retreive(self):
-        return jsonify('ok'), 200
+        req_data = request.get_json()
+        post = {
+            '_id': req_data['_id'],
+            'forum_name': req_data['forum_name']
+        }
+        response = make_response(
+            jsonify(
+                {"message": "post_not_found"}
+            ),
+            202
+        )
+        if forums_db.find_one_and_update({"name": post['forum_name']}, { '$pull': {'posts': ObjectId(post['_id'])} }):
+            response = make_response(
+                jsonify(
+                    {"message": "post_not_deleted"}
+                ),
+                201
+            )
+            if posts_db.find_one_and_delete({'_id': ObjectId(post['_id'])}):
+                response = make_response(
+                    jsonify(
+                        {"message": "post_deleted"}
+                    ),
+                    200
+                )
+        return response
+    def retrieve(self, post_ids):
+        pipeline = [
+            {'$match': {'_id': {'$in': post_ids}}},
+            {'$project': {
+                '_id': {"$toString": "$_id"},
+                'title': 1,
+                'username': 1,
+                'name': 1,
+                'forum_name': 1,
+                'post_body': 1,
+                'replies': 1,
+                'votes': 1,
+            }}
+        ]
+        posts = list(posts_db.aggregate(pipeline))
+        for post in posts:
+            post['replies'] = Post().retrieve(post['replies'])
+        return posts
     def vote(self):
-        return jsonify('ok'), 200
-    def comment(self):
-        return jsonify('ok'), 200
+        req_data = request.get_json()
+        response = make_response(
+            jsonify(
+                {"message": "post_not_found"}
+            ),
+            202,
+        )
+        post = posts_db.find_one({"_id": ObjectId(req_data['_id'])})
+        if post:
+            response = make_response(
+                jsonify(
+                    {"message": "voting_failed"}
+                ),
+                201,
+            )
+            if req_data['vote'] == 1:
+                posts_db.update_one({'_id': ObjectId(req_data['_id'])}, { '$inc': { 'votes': 1 } })
+                response = make_response(
+                    jsonify(
+                        {"message": "voting_succeeded"}
+                    ),
+                    200,
+                )
+            else:
+                posts_db.update_one({'_id': ObjectId(req_data['_id'])}, { '$inc': { 'votes': -1 } })
+                response = make_response(
+                    jsonify(
+                        {"message": "voting_succeeded"}
+                    ),
+                    200,
+                )
+        return response
+    def reply(self):
+        req_data = request.get_json()
+        parent_post = req_data['parent_post']
+        data = {
+            "title": req_data['title'],
+            "username": req_data['username'],
+            "forum_name": req_data['forum_name'],
+            "post_body": req_data['post_body'],
+        }
+        response = make_response(
+            jsonify(
+                {"message": "reply_creation_failed"}
+            ),
+            202,
+        )
+        new_reply = Post().create(data)
+        if new_reply.acknowledged:
+            response = make_response(
+                jsonify(
+                    {"message": "reply_insert_failed"}
+                ),
+                201
+            )
+            if posts_db.find_one_and_update({'_id': ObjectId(parent_post)},
+                                { '$push': { 'replies': new_reply.inserted_id } }):
+                response = make_response(
+                    jsonify(
+                        {"message": "reply_success"}
+                    ),
+                    200
+                )
+        return response
+
+#############
+# FUNCTIONS #
+#############
+
+def generate_token(user_id):
+    access_token = create_access_token(identity=user_id)
+    return access_token
+
+
+###############
+# OTHER STUFF #
+###############
+@app.errorhandler(401)
+def custom_401(error):
+    return jsonify({"message": "Token has expired"}), 401
 
 #########
 # USERS #
@@ -264,27 +438,48 @@ def signup():
     return User().signup()
 
 @app.route('/user/delete', methods=["POST"])
+@jwt_required()
 def delete():
     return User().delete()
+
+@app.route('/user/add_forum', methods=["POST"])
+@jwt_required()
+def add_forum():
+    return User().add_forum()
 
 ##########
 # FORUMS #
 ##########
 @app.route('/forum/create', methods=["POST"])
+@jwt_required()
 def forum_create():
+    cur_uuid = get_jwt_identity()
     return Forum().create()
 
 @app.route('/forum/delete', methods=["POST"])
+@jwt_required()
 def forum_delete():
     return Forum().delete()
 
 @app.route('/forum/post', methods=["POST"])
+@jwt_required()
 def forum_post():
     return Forum().post()
 
-@app.route('/forum/retrieve', methods=["GET"])
+@app.route('/forum/retrieve', methods=["POST"])
+@jwt_required()
 def forum_retrieve():
     return Forum().retrieve()
+
+@app.route('/post/vote', methods=["POST"])
+@jwt_required()
+def post_vote():
+    return Post().vote()
+
+@app.route('/post/reply', methods=["POST"])
+@jwt_required()
+def post_reply():
+    return Post().reply()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0",debug=True)

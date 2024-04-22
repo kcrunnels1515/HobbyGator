@@ -1,0 +1,41 @@
+/* Had to make a separate container to fi the formatting*/
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #000;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px 0 #000;
+  width: 40%; 
+}
+
+.center {
+  align-items: center;
+  justify-content: center;
+  margin-top: 1%;
+  margin-right: 35%;
+}
+
+.input{
+  justify-content: center;
+  display: flex;
+  margin-top: 0%;
+  font-size: 1rem;
+}
+
+.topLeft{
+  margin-right: 90%;
+  justify-content: left;
+}
+
+.tags{
+  width: inherit;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5%;
+}
