@@ -33,7 +33,8 @@ const SignUp = () => {
             "username": userName,
             "email": email,
             "passwd": password,
-            "confirmpasswd": confirmPassword
+            "confirmpasswd": confirmPassword,
+            "token": sessionStorage.getItem('token')
         }
 	  console.log(data)
         // this defines our URL so that we correctly access the backend with the right user and are able to change it

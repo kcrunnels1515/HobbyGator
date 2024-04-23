@@ -17,7 +17,8 @@ function CreatePost({forumName}) {
       "title": title, 
       "username": username, 
       "forum_name": forumName, 
-      "post_body": postBody
+      "post_body": postBody,
+      "token": sessionStorage.getItem('token')
     };
 
     // URL for posting:

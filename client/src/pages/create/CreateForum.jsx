@@ -36,10 +36,11 @@ const [infoBlock, setInfoBlock] = useState('');
         e.preventDefault();
         // These are how they are called in server.py
         const forum = { 
-        "title": title, 
-        "name": name,
-        "categories": [tag1,tag2,tag3], 
-        "info_block": infoBlock
+            "title": title,
+            "name": name,
+            "categories": [tag1,tag2,tag3],
+            "info_block": infoBlock,
+            "token": sessionStorage.getItem('token')
         };
 
         // URL for creating a forum:
@@ -50,7 +51,7 @@ const [infoBlock, setInfoBlock] = useState('');
         method: "POST",
         // Jsonify's the data so the db can understand
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(forum),
         }

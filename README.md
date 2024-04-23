@@ -19,7 +19,7 @@ The user Class can be accessed through the route /user{} with the extension of t
         > Code 202 means that the passwords submitted do not match eachother.
 
     3. For deleting a user the bracket extension is /delete where the method to the site is "POST".
-         > This function requires the username and password to be passed in as a JSON file from the client.
+        > This function requires the username and password to be passed in as a JSON file from the client.
             # the json file needs to be structured as a dictionary with key names "username" and "passwd"
         > Code 200 means that the username and password match, therefore successfully deleting the user.
         > Code 201 means that the user does not exist and client has provided an invalid username.
@@ -27,14 +27,14 @@ The user Class can be accessed through the route /user{} with the extension of t
 
 The Forum class can be accessed through the route /forum{} with the extension of the function that you want to access.
     1. For Forum creation the bracket extension is /create where the method to the site is "POST.
-        > This function requires the title, name, tags, info_block, and posts to be passed in as a JSON file from the client.
+        > This function requires the title, name, tags, info_block, username, and posts to be passed in as a JSON file from the client.
             # the json file needs to be structured as a dictionary with key names "title", "name", "tags", and "info_block".
         > Code 200 means that all the information was correctly passed in and the api has succesfully created the new Forum.
         > Code 201 means that client passed in no name which means that the Forum can't be created 
         > Code 202 means that the Forum name already exists and is not available for use in the new Forum.
 
     2. For deleting a Forum the bracket extension is /delete where the method to the site is "POST".
-         > This function requires the name of the forum to be passed in as a JSON file from the client.
+        > This function requires the name of the forum to be passed in as a JSON file from the client.
             # the json file needs to be structured as a dictionary with key name "name".
         > Code 200 means that the Forum exists, and it successfully deleted the forum.
         > Code 201 means that the user does not exist and client has provided an invalid name.
@@ -47,7 +47,7 @@ The Forum class can be accessed through the route /forum{} with the extension of
         > Code 202 means that the forum asked for does not exist.
 
     4. For retrieving a forum the bracket extension is /retrieve where the method to the site is "GET".
-         > This function requires the name of the forum to be passed in as a JSON file from the client.
+        > This function requires the name of the forum to be passed in as a JSON file from the client.
             # the json file needs to be structured as a dictionary with key name "forum_name".
         > Code 200 means that the Forum exists and it has been successfully retrieved.
         > Code 201 means that the user does not exist and client has provided an invalid name.
@@ -61,9 +61,14 @@ The Post class can be accessed through the route /post{} with the extension of t
         > Code 202 means that the id does not match an existing post in the system.
 
     2. For replying to a post the bracket extension is /reply where the method to the site is "POST".
-         > This function requires the name of the parent post, the title of the response, username, the name of the forum and the response body to be passed in as a JSON file from the client.
+        > This function requires the name of the parent post, the title of the response, username, the name of the forum and the response body to be passed in as a JSON file from the client.
             # the json file needs to be structured as a dictionary with key names "parent_post", "title", "username", "forum_name" and "post_body".
         > Code 200 means that the reply posted successfully next to the parent post. 
         > Code 201 means that the posting the reply was not successful.
         > Code 202 means that the new post creation failed and was not acknowledged.
 
+
+
+create forum line 43
+login.jsx line 26
+signup.jsx line 37

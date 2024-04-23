@@ -29,7 +29,6 @@ class User:
         #breakpoint()
         req_data = request.get_json()
         user = {
-                "pub_id": uuid.uuid4().hex,
                 "email": req_data['email'],
                 "username": req_data['username'],
                 "passwd": req_data['passwd'],
@@ -90,7 +89,10 @@ class User:
                 token = generate_token(str(result['_id']))
                 response = make_response(
                     jsonify(
-                        {"access_token", token}
+                        {
+                            "token": token,
+                            "forums": [str(i) for i in result["forums"]],
+                         }
                     ),
                     200,
                 )
@@ -158,15 +160,16 @@ class User:
                      200,
                  )
         return response
-    def get_forums(self):
-        req_data = request.get_json()
-        response = make_response(
-            jsonify(
-                {"message": "user_dont_exists"}
-            ),
-            202
-        )
-        return response
+    def get_user_by_id(self, id):
+        result = users_db.find_one({ "_id": ObjectId(id) })
+        if result:
+            return {
+                "email": result["email"],
+                "username": result["username"],
+                "forums": result["forums"],
+            }
+        return None
+
 class Forum:
     def create(self):
         req_data = request.get_json()
@@ -191,6 +194,9 @@ class Forum:
                 201
             )
             if forums_db.insert_one(forum):
+                # needs username param to work
+                result = user_db.find_one
+                if users_db.find_one_and_update({ 'username': user['username'] }, { '$push': {'forums': forum['_id']} }):
                 response = make_response(
                     jsonify(
                         {"message": forum["name"]}
@@ -271,6 +277,7 @@ class Forum:
                 200
             )
         return response
+
 class Post:
     def create(self, data):
         data['name'] = "".join([ c.lower() if c.isalnum() else "_" for c in data["title"] ]) + '_' + str(uuid.uuid4().hex[0:6])
@@ -418,6 +425,16 @@ def generate_token(user_id):
     access_token = create_access_token(identity=user_id)
     return access_token
 
+def token_req(func):
+    @wraps(func)
+    def decorated(*args, **kwargs):
+        token = request.get_json()['token']
+        if not token:
+            return jsonify({'alert': 'token missing'}), 403
+        try:
+            payload = jwt.decode(token, app.config['SECRET_KEY'])
+        except:
+            return jsonify({'alert': 'token invalid'}), 403
 
 ###############
 # OTHER STUFF #
@@ -425,6 +442,12 @@ def generate_token(user_id):
 @app.errorhandler(401)
 def custom_401(error):
     return jsonify({"message": "Token has expired"}), 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return jsonify({'message': 'Invalid Token', 'error': str(error)}), 422
+
+
 
 #########
 # USERS #
@@ -438,12 +461,11 @@ def signup():
     return User().signup()
 
 @app.route('/user/delete', methods=["POST"])
-@jwt_required()
 def delete():
     return User().delete()
 
+#@jwt_required()
 @app.route('/user/add_forum', methods=["POST"])
-@jwt_required()
 def add_forum():
     return User().add_forum()
 
@@ -451,33 +473,32 @@ def add_forum():
 # FORUMS #
 ##########
 @app.route('/forum/create', methods=["POST"])
-@jwt_required()
+@token_req()
 def forum_create():
-    cur_uuid = get_jwt_identity()
     return Forum().create()
 
 @app.route('/forum/delete', methods=["POST"])
-@jwt_required()
+@token_req()
 def forum_delete():
     return Forum().delete()
 
 @app.route('/forum/post', methods=["POST"])
-@jwt_required()
+@token_req()
 def forum_post():
     return Forum().post()
 
 @app.route('/forum/retrieve', methods=["POST"])
-@jwt_required()
+@token_req()
 def forum_retrieve():
     return Forum().retrieve()
 
 @app.route('/post/vote', methods=["POST"])
-@jwt_required()
+@token_req()
 def post_vote():
     return Post().vote()
 
 @app.route('/post/reply', methods=["POST"])
-@jwt_required()
+@token_req()
 def post_reply():
     return Post().reply()
 
