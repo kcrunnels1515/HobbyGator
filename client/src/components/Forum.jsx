@@ -122,7 +122,7 @@ const Forum = () => {
 
       </main>
       <p className= 'create'>
-      <CreatePost forumName = {forumtitle} />
+      <CreatePost forumName = {forum_name} />
       </p> 
     </div>
   );

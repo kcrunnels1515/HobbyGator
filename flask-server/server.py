@@ -195,8 +195,8 @@ class Forum:
             )
             if forums_db.insert_one(forum):
                 # needs username param to work
-                result = user_db.find_one
-                if users_db.find_one_and_update({ 'username': user['username'] }, { '$push': {'forums': forum['_id']} }):
+#                result = user_db.find_one
+#                if users_db.find_one_and_update({ 'username': user['username'] }, { '$push': {'forums': forum['_id']} }):
                 response = make_response(
                     jsonify(
                         {"message": forum["name"]}
@@ -473,32 +473,32 @@ def add_forum():
 # FORUMS #
 ##########
 @app.route('/forum/create', methods=["POST"])
-@token_req()
+#@token_req()
 def forum_create():
     return Forum().create()
 
 @app.route('/forum/delete', methods=["POST"])
-@token_req()
+#@token_req()
 def forum_delete():
     return Forum().delete()
 
 @app.route('/forum/post', methods=["POST"])
-@token_req()
+#@token_req()
 def forum_post():
     return Forum().post()
 
 @app.route('/forum/retrieve', methods=["POST"])
-@token_req()
+#@token_req()
 def forum_retrieve():
     return Forum().retrieve()
 
 @app.route('/post/vote', methods=["POST"])
-@token_req()
+#@token_req()
 def post_vote():
     return Post().vote()
 
 @app.route('/post/reply', methods=["POST"])
-@token_req()
+#@token_req()
 def post_reply():
     return Post().reply()
 
